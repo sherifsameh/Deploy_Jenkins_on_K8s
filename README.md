@@ -16,7 +16,6 @@ Hosting Jenkins on a Kubernetes Cluster is beneficial for Kubernetes-based deplo
 
     5-Create a service YAML and deploy it.
 # Jenkins Kubernetes Manifest Files
-  * https://github.com/scriptcamp/kubernetes-jenkins
     
 ```bash
    # Create a Namespace for Jenkins
@@ -123,7 +122,6 @@ echo http://$NODE_IP:$NODE_PORT/login
 
 
 # Reference 
-https://www.jenkins.io/doc/book/installing/kubernetes/
-
-https://github.com/scriptcamp/kubernetes-jenkins/tree/main
-
+* https://www.jenkins.io/doc/book/installing/kubernetes/
+* https://github.com/scriptcamp/kubernetes-jenkins/tree/main
+* https://github.com/scriptcamp/kubernetes-jenkins
