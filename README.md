@@ -2,9 +2,9 @@
 
 Hosting Jenkins on a Kubernetes Cluster is beneficial for Kubernetes-based deployments and dynamic container-based scalable Jenkins agents. Here, we see a step-by-step process for setting up Jenkins on a Kubernetes Cluster.
 
-# First Setup Jenkins On Kubernetes without helm
+* First Setup Jenkins On Kubernetes without helm
   
-* For Setting up a Jenkins Cluster on Kubernetes, we will do the following:
+  * For Setting up a Jenkins Cluster on Kubernetes, we will do the following:
 
     1-Create a Namespace
 
