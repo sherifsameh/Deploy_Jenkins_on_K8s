@@ -26,3 +26,74 @@ spec:
       }
     }
   }
+
+===================================================================================================
+
+
+podTemplate(containers: [
+    containerTemplate(
+        name: 'docker', 
+        image: 'docker', 
+        command: 'sleep', 
+        args: '30d')
+  ]) {
+    node(POD_LABEL) {
+        stage('Get a dotnet project') {
+            git branch: 'main', credentialsId: 'Github', url: 'https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web.git'
+            container('docker') {
+                stage('Build-Docker-Image') {
+                    sh 'docker build -t sherifsameh/dotnet-app .'
+                    sh 'docker login -u sherifsameh -p password '
+                    sh 'docker push sherifsameh/dotnet-app:latest'
+                    sh 'docker logout'
+                 
+                }
+            }
+        }
+    }
+}
+
+=================================================================
+
+
+podTemplate(label: 'POD_LABEL', containers: [
+	containerTemplate(name: 'dotnet', image: 'bitnami/dotnet-sdk', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]) {
+    node(POD_LABEL) {
+        stage('Get a dotnet project') {
+            git branch: 'main', credentialsId: 'Github', url: 'https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web.git'
+            container('docker') {
+                stage('Build-Docker-Image') {
+                    sh 'docker build -t sherifsameh/dotnet-app .'
+                    sh 'docker login -u sherifsameh -p ${LOGIN_TOKEN} '
+                    sh 'docker push sherifsameh/dotnet-app:latest'
+                    sh 'docker logout'
+                }
+            }
+        }
+		     stage('do some kubectl work') {
+            container('kubectl') {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_HUB_USER',
+                        passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                    sh "kubectl get nodes"
+                }
+            }
+        }
+        stage('do some helm work') {
+            container('helm') {
+
+               sh "helm ls"
+            }
+        }
+    }
+}
+
+
