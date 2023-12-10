@@ -19,3 +19,23 @@ podTemplate(containers: [
             }
         }
     }
+
+===========================================================================================
+pipeline {
+     agent any
+	   stages {
+	      stage('Checkout Source') {
+      steps {
+        git branch: 'main', credentialsId: 'Github', url: 'https://github.com/sherifsameh/mslearn-tailspin-spacegame-web.git'
+      }
+    }
+	      stage{'build'}{
+		steps {
+		  sh 'dotnet build ./Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj -c Release'
+		  sh 'dotnet publish ./Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj -c Release -o /publish'
+		}
+	 }
+	}
+}
+
+
