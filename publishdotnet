@@ -1,0 +1,21 @@
+podTemplate(containers: [
+    containerTemplate(
+        name: 'dotnet', 
+        image: 'bitnami/dotnet-sdk:latest', 
+        command: 'sleep', 
+        args: '30d'
+        )
+  ]) 
+    node(POD_LABEL) {
+        stage('Get a Dotnet project') {
+            git 'https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web.git'
+            container('dotnet') {
+                stage('Build a Dotnet project') {
+                    sh '''
+                    dotnet build ./Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj -c Release
+					          dotnet publish ./Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj -c Release
+                    '''
+                }
+            }
+        }
+    }
